@@ -181,7 +181,7 @@ void ifft_nonrec_multithreaded(const std::complex<double>* inp, std::complex<dou
 int main()
 {
     const std::size_t exp_count = 10;
-    constexpr std::size_t n = 1llu << 20;//25
+    constexpr std::size_t n = 1llu << 20;
     std::vector<std::complex<double>> original(n), spectre(n), restored(n);
 
     auto print_vector = [](const std::vector<std::complex<double>>& v) {
