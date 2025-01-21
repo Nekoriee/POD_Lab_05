@@ -181,7 +181,7 @@ void ifft_nonrec_multithreaded(const std::complex<double>* inp, std::complex<dou
 int main()
 {
     const std::size_t exp_count = 10;
-    constexpr std::size_t n = 1llu << 20;
+    constexpr std::size_t n = 1llu << 20;//25
     std::vector<std::complex<double>> original(n), spectre(n), restored(n);
 
     auto print_vector = [](const std::vector<std::complex<double>>& v) {
@@ -212,7 +212,15 @@ int main()
             return true;
     };
 
-    // генерация пирамидального сигнала
+    std::ofstream output("output.csv");
+    if (!output.is_open())
+    {
+        std::cout << "Error!\n";
+        return -1;
+    }
+    output << "T,Duration,Acceleration\n";
+
+    //Generate triangular signal.
     for (std::size_t i = 0; i < n / 2; i++)
     {
         original[i] = i;
@@ -249,10 +257,12 @@ int main()
             time_sum_1 = time_sum;
         }
 
-        std::cout << "FFT: T = " << i << ", duration = "
-            << time_sum / exp_count << "ms, acceleration = " << (time_sum_1 / exp_count) / (time_sum / exp_count) << "\n";
+        std::cout << "T = " << i << ", duration = "
+            << time_sum / exp_count << ", acceleration = " << (time_sum_1 / exp_count) / (time_sum / exp_count) << "\n";
+        output << i << "," << time_sum / exp_count << "," << (time_sum_1 / exp_count) / (time_sum / exp_count) << "\n";
     }
     std::cout << "==Done.==\n";
 
+    output.close();
     return 0;
 }
